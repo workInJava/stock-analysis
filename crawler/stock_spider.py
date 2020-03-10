@@ -1,7 +1,7 @@
 """
     作者：wanghuamin
     日期：20200308
-    功能：tools  http client
+    功能：爬去当天股票数据
     版本：1.0
 """
 import requests
@@ -55,27 +55,6 @@ def currentData(dateStr):
        # dbconn.insertOne(sql, add_data)
         batch_data.append(add_data)
     dbconn.insertBatch(sql, batch_data)
-
-
-
-
-def html163(code):
-    url_key = '163_html'
-    url = url_config.get_config(url_key).format(code)
-    html_content = requests.get(url, timeout=30)
-    soup = BeautifulSoup(html_content.text, 'lxml')
-    date_end = soup.find(name='input', attrs={"name": "date_end_type", "checked": "checked"})['value'].replace('-','')
-    date_start = soup.find(name='input', attrs={"name": "date_start_type", "checked": "checked"})['value'].replace('-','')
-
-    return soup
-
-
-
-
-
-def historyData(url_config, stockCode, date):
-    url = url_config.format(stockCode)
-
 
 
 if __name__ == '__main__':
