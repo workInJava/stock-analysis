@@ -47,7 +47,7 @@ def drawChar(datas, code=None):
     ax1.set_title(code)
     fig.set_size_inches(30, 30, forward=True)
     my_plotter(ax1, x, y0, {'marker': '.'}, label='0刻度')
-    my_plotter(ax1, x, y4,  {'marker': 'x'}, label='updown')
+    my_plotter(ax1, x, y4, {'marker': 'x'}, label='updown')
     my_plotter(ax2, x, y1, {'marker': 'o'}, label='open')
     my_plotter(ax2, x, y2, {'marker': '*'}, label='high')
     my_plotter(ax2, x, y3, {'marker': '+'}, label='yestClose')
@@ -69,7 +69,7 @@ def my_plotter(ax, data1, data2, param_dict, label):
 def main():
     code1 = "601099"
     drawChar(selectData(code1), code='太平洋'+code1)
-    drawChar(selectData('600302'))
+   # drawChar(selectData('600302'))
 
 if __name__ == '__main__':
     main()
