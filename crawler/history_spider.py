@@ -19,7 +19,8 @@ url_config = http_config()
 
 def html163(stockCode):
     url_key = '163_html'
-    url = url_config.get_config(url_key).format(stockCode = stockCode)
+    symbol = stockCode[1:]
+    url = url_config.get_config(url_key).format(symbol = symbol)
     html_content = requests.get(url, timeout=3000)
     soup = BeautifulSoup(html_content.text, 'lxml')
     date_end = soup.find(name='input', attrs={"name": "date_end_type", "checked": "checked"})['value'].replace('-', '')
@@ -32,7 +33,10 @@ def html163(stockCode):
 
 
 def historyData():
-    query_sql = 'select distinct(symbol) from stock_base_163 limit 1564, 36'
+    # html163('002976')
+    # resolve('002976')
+   # query_sql = 'select distinct(symbol) from stock_base_163 limit 1564, 36'
+    query_sql = 'select code, count(1) from stock_base_163 where code like \'10%\' group by code having count(1)=1'
     stock_codes = dbconn.selectAll(query_sql)
     for stockCode in stock_codes:
         html163(stockCode[0])
@@ -55,7 +59,7 @@ def resolve(stockCode):
             for k, v in add_data.items():
                 if k == 'symbol':
                     add_data['symbol'] = str(v).replace("'", "")
-                if v == 'None':
+                if v == 'None' or v == '':
                     add_data[k] = '0'
             arrays.append(add_data)
         print(arrays)

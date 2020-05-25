@@ -17,13 +17,12 @@ url_config = http_config()
 
 
 def httpClient(url_key):
-    url = url_config.get_config(url_key)
+    page = 0
+    count = 3856
+    url = url_config.get_config(url_key).format(page=page, count=count)
     html_content = requests.get(url, timeout=30)
     soup = BeautifulSoup(html_content.text, 'lxml')
     return soup
-
-
-
 
 
 def currentData(dateStr):

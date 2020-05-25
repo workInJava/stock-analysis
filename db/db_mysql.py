@@ -49,6 +49,10 @@ class db_mysql_detail():
         self.__conn.commit()
         print(self.__cursor.rowcount, "记录插入成功。")
 
+    def updateBatch(self, update_sql, batch_data):
+        self.__cursor.executemany(update_sql, batch_data)
+        self.__conn.commit()
+        print(self.__cursor.rowcount, "记录更新成功。")
 
     def close(self):
         self.__cursor.close()

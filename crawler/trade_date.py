@@ -37,4 +37,4 @@ def today_is_tradeday():
 
 
 if __name__ == '__main__':
-    print(is_tradeday('20200125'))
+    print(is_tradeday('20200522'))
