@@ -1,7 +1,7 @@
 """
     作者：wanghuamin
     日期：20200308
-    功能：601099 开盘，最高，昨收，涨跌幅
+    功能： 开盘，最高，昨收，涨跌额
     版本：1.0
 """
 from db_mysql import db_mysql_detail
@@ -40,11 +40,11 @@ def drawChar(datas, symbol=None):
     for data in datas:
         x.append(data[0])
         y0.append(0)
-        y1.append(data[1])
-        y2.append(data[2])
-        y3.append(data[3]+data[4])
-        y4.append(data[4])
-        y5.append(data[3])
+        y1.append(data[1].quantize(Decimal('0.00')))
+        y2.append(data[2].quantize(Decimal('0.00')))
+        y3.append((data[3]+data[4]).quantize(Decimal('0.00')))
+        y4.append(data[4].quantize(Decimal('0.00')))
+        y5.append(data[3].quantize(Decimal('0.00')))
     fig, (ax1, ax2) = plt.subplots(2, 1)
     ax1.set_title(symbol)
     fig.set_size_inches(30, 30, forward=True)
@@ -56,36 +56,8 @@ def drawChar(datas, symbol=None):
    # my_plotter(ax2, x, y5, {'marker': '|'}, label='yestClose')
     plt.gcf().autofmt_xdate()
     fig.tight_layout()
-    #
-    # def scroll(event):
-    #     axtemp = event.inaxes
-    #     x_min, x_max = axtemp.get_xlim()
-    #     fanwei_x = (x_max - x_min) / 10
-    #     if event.button == 'up':
-    #         axtemp.set(xlim=(x_min + fanwei_x, x_max - fanwei_x))
-    #     elif event.button == 'down':
-    #         axtemp.set(xlim=(x_min - fanwei_x, x_max + fanwei_x))
-    #     fig.canvas.draw_idle()
-    #     # 这个函数实时更新图片的显示内容
-    #
-    # def motion(event):
-    #     try:
-    #         temp = y[int(np.round(event.xdata))]
-    #         for i in range(len_y):
-    #             _y[i] = temp
-    #         line_x.set_ydata(_y)
-    #         line_y.set_xdata(event.xdata)
-    #         ######
-    #         text0.set_position((event.xdata, temp))
-    #         text0.set_text(str(temp))
-    #
-    #         fig.canvas.draw_idle()  # 绘图动作实时反映在图像上
-    #     except:
-    #         pass
-    #
-    # fig.canvas.mpl_connect('scroll_event', scroll)
-    # fig.canvas.mpl_connect('motion_notify_event', motion)
     plt.show()
+    plt.close(fig=fig)
 
 def my_plotter(ax, data1, data2, param_dict, label):
     out = ax.plot(data1, data2, **param_dict, label=label)
@@ -99,11 +71,18 @@ def my_plotter(ax, data1, data2, param_dict, label):
     ax.grid(True)
     return out
 
-def main():
-    #symbol = "600030"
-    symbol = '600809'
-    drawChar(selectData(symbol), symbol='山西汾酒'+symbol)
+
+
+def draw(symbol, name):
+    #symbol = "601099"
+    #symbol = '600809'
+    try:
+        drawChar(selectData(symbol), symbol=name+symbol)
+    except RuntimeError:
+        print("Error: 输出异常symbol:"+symbol)
    # drawChar(selectData('600302'))
 
 if __name__ == '__main__':
-    main()
+    symbol = "601099"
+    name = ""
+    draw(symbol, name)
