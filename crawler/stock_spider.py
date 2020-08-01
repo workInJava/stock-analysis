@@ -18,7 +18,7 @@ url_config = http_config()
 
 def httpClient(url_key):
     page = 0
-    count = 3856
+    count = 3924
     url = url_config.get_config(url_key).format(page=page, count=count)
     html_content = requests.get(url, timeout=30)
     soup = BeautifulSoup(html_content.text, 'lxml')
@@ -30,7 +30,7 @@ def currentData(dateStr):
     soup = httpClient(url_key)
     jsondata = json.loads(soup.p.string)
 
-    sql = ("INSERT INTO stock_base_163 "
+    sql = ("INSERT INTO temp "
            "(day, code, five_minute, high, open,"
            "low, yestClose, hs, lb, mcap, mfratio, mfsum, name,"
            "pe, updown, percent, sname, symbol, tcap, turnover, volume, wb, zf)"

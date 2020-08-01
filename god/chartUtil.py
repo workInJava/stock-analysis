@@ -6,7 +6,6 @@
 """
 from db_mysql import db_mysql_detail
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import MultipleLocator
 import matplotlib.ticker as mticker
 from decimal import *
 import matplotlib.dates as mdates
@@ -17,10 +16,10 @@ dbconn = db_mysql_detail('python')
 
 def selectData(symbol):
 
-    sql = ("select day,open,high,yestClose,updown from stock_base_163 "
+    sql = ("select day,open,high,yestClose,updown,lb,wb from stock_base_163 "
            "where symbol = %s order by day asc")
 
-    history_sql = ("select day,topen as open,high,lclose as yestClose ,pchg*0.01 as updown from stock_history_163 "
+    history_sql = ("select day,topen as open, high, lclose as yestClose ,pchg*0.01 as updown,0.0 as lb,0.0 as wb from stock_history_163 "
            "where symbol = %s and day >'2020-01-01' order by day asc")
 
     datas = dbconn.selectAll(sql, where=(symbol,))
@@ -37,6 +36,8 @@ def drawChar(datas, symbol=None):
     y3 = []
     y4 = []
     y5 = []
+    y6 = []
+    y7 = []
     for data in datas:
         x.append(data[0])
         y0.append(0)
@@ -45,7 +46,9 @@ def drawChar(datas, symbol=None):
         y3.append((data[3]+data[4]).quantize(Decimal('0.00')))
         y4.append(data[4].quantize(Decimal('0.00')))
         y5.append(data[3].quantize(Decimal('0.00')))
-    fig, (ax1, ax2) = plt.subplots(2, 1)
+        y6.append(data[5].quantize(Decimal('0.00')))
+        y7.append(data[6].quantize(Decimal('0.00')))
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
     ax1.set_title(symbol)
     fig.set_size_inches(30, 30, forward=True)
     my_plotter(ax1, x, y0, {'marker': '.'}, label='0刻度')
@@ -53,6 +56,8 @@ def drawChar(datas, symbol=None):
     my_plotter(ax2, x, y1, {'marker': 'o'}, label='open')
     my_plotter(ax2, x, y2, {'marker': '*'}, label='high')
     my_plotter(ax2, x, y3, {'marker': '+'}, label='Close')
+    my_plotter(ax3, x, y6, {'marker': '+'}, label='lb')
+    my_plotter(ax3, x, y7, {'marker': '+'}, label='wb')
    # my_plotter(ax2, x, y5, {'marker': '|'}, label='yestClose')
     plt.gcf().autofmt_xdate()
     fig.tight_layout()
