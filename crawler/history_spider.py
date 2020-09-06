@@ -8,7 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 from url_config import http_config
 from db_mysql import db_mysql_detail
-
+import time
 dbconn = db_mysql_detail('python')
 import csv
 import os
@@ -35,9 +35,9 @@ def html163(stockCode):
 
 
 def historyData(start, end):
-
-    query_sql = 'select code from temp ORDER BY CODE limit {start}, {end}'
-    print(query_sql.format(start=start, end=end))
+    start_time = time.time()
+    query_sql = 'select t.code from temp t left join stock_history s on t.`symbol`=s.symbol where s.`symbol` is null limit {start}, {end}'
+   # print(query_sql.format(start=start, end=end))
     stock_codes = dbconn.selectAll(query_sql.format(start=start, end=end))
     error_stock_codes = []
     for stockCode in stock_codes:
@@ -53,7 +53,9 @@ def historyData(start, end):
             except Exception as e:
                 print(e)
                 continue
-
+    stop_time = time.time()
+    cost = (start_time-stop_time)/60
+    print("cost %s min" % cost)
 
 
 def handle(stockCode):
